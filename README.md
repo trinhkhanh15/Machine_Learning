@@ -1,0 +1,33 @@
+
+# Machine Learning?
+- in every life situation, we see many function: 
+  - hours studied → high exam score (sometimes it's not)
+  - history of stock price → its next movement
+- we want to predict these things with computer, but the computer doesn't understand these fucking things
+- so we make a function 
+- > $f(x) = ax + b$ and $y = f(x) + noise$ 
+- > we need to find a and b such that $y - f(x)$ is as small as possible 
+- this thing called Loss Function
+- > $$MSE = \frac{1}{n} \sum_{i=1}^{n} (y_i - \hat{y}_i)^2$$
+- making ML model = choosing:
+  - model form
+  - loss function
+  - optimize method 
+
+## I. Linear Algorithm
+### some important mistake:
+1. **Non-linear data**
+- In 2 dimension graph, linear data is a line. In 3 dimension, linear data is a plane. In 3+ dimension, concepts of line and plane are not suitable, some new concept appears is hyperplane. 
+- Therefore, if we want to apply linear algorithm, we need to visualize the data.  
+- using Harvey-Collier Linearity test is the real solution here: the main idea is recursive residual (phần dư tiến lũy):
+  - sort the data list, then pick the first 5 point to create the temporary line
+  - then pick the next 6th point, see how far is it to the line, the same process with 7th, 8th,... → here is recursive residual
+  - if the data is linear: the average of the residual (phần dư) has a value approximately equal to 0, because the next point sometimes tilted upwards, sometime downwards
+  - if it's non-linear: the value here is far away from 0, the reason is these points are skewed to one side of the line
+- using "statsmodels" library to use this test: just focus on p_value, if it > 0.05 → it's linear, non-linear if it < 0.05
+- don't just stop at comparing this value with 0.05, see the graph figure make from residuals, it's non-linear if it looked like the letter U
+2. Update soon
+### 1. Linear Regression
+- https://machinelearningcoban.com/2016/12/28/linearregression/ 
+
+
