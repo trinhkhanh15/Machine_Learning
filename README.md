@@ -27,6 +27,11 @@
 - using "statsmodels" library to use this test: just focus on p_value, if it > 0.05 → it's linear, non-linear if it < 0.05
 - don't just stop at comparing this value with 0.05, see the graph figure make from residuals, it's non-linear if it looked like the letter U
 2. Update soon
+### something make model less accurate
+1. data in some columns are much greater than the others (using scaler)
+2. the different between maximum and minimum is too large, residuals are too big (using log transform for result column)
+3. the outliers: in result column, some values are much greater or much lower than the others (check and remove the rows which are rows with values exceeding 3 times the standard deviation)
+4. missing feature engineering (making some feature from the raw data)
 ### 1. Linear Regression
 - https://machinelearningcoban.com/2016/12/28/linearregression/ 
 

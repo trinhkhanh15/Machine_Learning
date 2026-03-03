@@ -5,3 +5,6 @@ scikit-learn
 statsmodels
 seaborn
 kagglehub
+scipy
+ucimlrepo
+kagglehub[pandas-datasets]
