@@ -1,6 +1,9 @@
 import kagglehub
 import pandas as pd
 from sklearn.feature_selection import mutual_info_regression
+import matplotlib.pyplot as plt
+import numpy as np
+import seaborn as sns
 
 def pre_process(df):
     boolean_cols = ["mainroad", "guestroom", "basement", "hotwaterheating", "airconditioning", "prefarea"]
@@ -8,8 +11,14 @@ def pre_process(df):
     for col in boolean_cols:
         df[col] = df[col].replace({"yes": 1, "no": 0})
 
+    df["area_squared"] = np.square(df["area"])
+    df["area_log"] = np.log(df["area"])
+
+    df["total_rooms"] = df["bedrooms"] + df["bathrooms"] + df["guestroom"]
+    df["prime_location"] = np.bitwise_or(df["prefarea"], df["mainroad"])
+
     df = pd.get_dummies(df, columns=['furnishingstatus'], drop_first=True, dtype=int)
-    df = df.astype(int)
+    df = df.astype(float)
 
     return df
 
@@ -19,6 +28,15 @@ def get_mi_scores(X, y, discrete_features):
     mi_scores = mi_scores.sort_values(ascending=False)
 
     return mi_scores
+
+def plot_mi_scores(scores):
+    scores = scores.sort_values(ascending=True)
+    width = np.arange(len(scores))
+    ticks = list(scores.index)
+    plt.barh(width, scores)
+    plt.yticks(width, ticks)
+    plt.title("Mutual Information Scores")
+    plt.show()
 
 def main():
     path = kagglehub.dataset_download("yasserh/housing-prices-dataset")
@@ -33,6 +51,17 @@ def main():
 
     mi_scores = get_mi_scores(X, y, discrete_features)
     print(mi_scores)
+
+    print(df.keys())
+
+    # plt.figure(dpi=100, figsize=(8, 5))
+    # plot_mi_scores(mi_scores)
+
+    # sns.relplot(x="area", y="price", hue="area", data=df)
+    # sns.relplot(x="area_squared", y="price", hue="area", data=df)
+    sns.relplot(x="area_log", y="price", hue="area", data=df)
+    # sns.relplot(x="prime_location", y="price", hue="price", data=df)
+    plt.show()
 
 if __name__ == "__main__":
     main()
