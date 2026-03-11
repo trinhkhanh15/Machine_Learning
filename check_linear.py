@@ -1,10 +1,7 @@
 import statsmodels.api as sm
 from statsmodels.stats.diagnostic import linear_harvey_collier
 
-def process_linearity(df, y_name, title):
-    X = df.drop(y_name, axis=1)
-    y = df[y_name]
-
+def process_linearity(X, y, title):
     check_linearity(X, y, title)
     create_graph(X, y, title)
 
