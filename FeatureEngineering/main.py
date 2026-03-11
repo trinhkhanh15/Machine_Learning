@@ -11,15 +11,22 @@ def pre_process(df):
     for col in boolean_cols:
         df[col] = df[col].replace({"yes": 1, "no": 0})
 
-    df["area_squared"] = np.square(df["area"])
-    df["area_log"] = np.log(df["area"])
+    df = pd.get_dummies(df, columns=['furnishingstatus'], drop_first=True, dtype=int)
 
     df["total_rooms"] = df["bedrooms"] + df["bathrooms"] + df["guestroom"]
-    df["prime_location"] = np.bitwise_or(df["prefarea"], df["mainroad"])
+    df["prime_location"] = np.bitwise_and(df["prefarea"], df["mainroad"])
 
-    df = pd.get_dummies(df, columns=['furnishingstatus'], drop_first=True, dtype=int)
+    df["furnishing"] = np.bitwise_not(np.bitwise_or(df["furnishingstatus_unfurnished"], df["furnishingstatus_semi-furnished"]))
+    df["total_furnishing"] = df["airconditioning"] + df["furnishing"] + df["hotwaterheating"]
+
+    '''
+    1 _ 0 = 0
+    0 _ 1 = 0
+    1 _ 1 = 0
+    0 _ 0 = 1
+    '''
+
     df = df.astype(float)
-
     return df
 
 def get_mi_scores(X, y, discrete_features):
@@ -52,14 +59,12 @@ def main():
     mi_scores = get_mi_scores(X, y, discrete_features)
     print(mi_scores)
 
-    print(df.keys())
-
-    # plt.figure(dpi=100, figsize=(8, 5))
-    # plot_mi_scores(mi_scores)
+    plt.figure(dpi=100, figsize=(8, 5))
+    plot_mi_scores(mi_scores)
 
     # sns.relplot(x="area", y="price", hue="area", data=df)
     # sns.relplot(x="area_squared", y="price", hue="area", data=df)
-    sns.relplot(x="area_log", y="price", hue="area", data=df)
+    # sns.relplot(x="area_log", y="price", hue="area", data=df)
     # sns.relplot(x="prime_location", y="price", hue="price", data=df)
     plt.show()
 
